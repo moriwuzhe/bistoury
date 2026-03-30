@@ -6,7 +6,7 @@ import com.taobao.arthas.core.shell.handlers.Handler;
 import com.taobao.arthas.core.shell.impl.ShellImpl;
 import com.taobao.arthas.core.shell.system.Job;
 import com.taobao.arthas.core.util.LogUtil;
-import com.taobao.middleware.logger.Logger;
+import com.alibaba.arthas.deps.org.slf4j.Logger;
 import qunar.tc.bistoury.common.NamedThreadFactory;
 
 import java.util.Date;
@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class QGlobalJobControllerImpl extends QJobControllerImpl {
 
-    private static final Logger logger = LogUtil.getArthasLogger();
+    private static final Logger logger = LogUtil.getResultLogger();
 
     // 改成executor实现并设置在cancel时remove，防止内存在timeout时间内不清理
     private final ScheduledThreadPoolExecutor timeoutExecutor = initTimeoutExecutor();

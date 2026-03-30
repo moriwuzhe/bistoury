@@ -32,11 +32,10 @@ public class DefaultClassFileBuffer implements ClassFileBuffer {
 
     private static final ClassFileBuffer INSTANCE = new DefaultClassFileBuffer();
 
-    private final Map<Class<?>, byte[]> classBytesCache;
+    private final Map<Class<?>, byte[]> classBytesCache = new java.util.WeakHashMap<Class<?>, byte[]>();
 
     private DefaultClassFileBuffer() {
-        classBytesCache = Enhancer.classBytesCache;
-
+        // We used a separate cache here since Enhancer's cache is different type, just create one
     }
 
     public static ClassFileBuffer getInstance() {

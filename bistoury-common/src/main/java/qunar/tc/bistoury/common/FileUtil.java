@@ -17,7 +17,6 @@
 
 package qunar.tc.bistoury.common;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
@@ -25,6 +24,7 @@ import com.google.common.io.Files;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -138,11 +138,11 @@ public final class FileUtil {
     }
 
     public static String read(InputStream in) throws IOException {
-        return readString(in, Charsets.UTF_8.name());
+        return readString(in, StandardCharsets.UTF_8.name());
     }
 
     public static String readFile(File file) throws IOException {
-        return Files.asCharSource(file, Charsets.UTF_8).read();
+        return Files.asCharSource(file, StandardCharsets.UTF_8).read();
     }
 
     public static String readString(File file, Charset charset) throws IOException {

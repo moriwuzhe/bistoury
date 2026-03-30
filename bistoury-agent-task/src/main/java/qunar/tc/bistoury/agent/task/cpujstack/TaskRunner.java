@@ -27,6 +27,8 @@ import com.google.common.collect.Sets;
 import com.google.common.io.CharSource;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Executor;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,7 +133,8 @@ public class TaskRunner implements Runnable {
         kvDb.put(KvUtils.getThreadMinuteCpuTimeKey(timestamp), String.valueOf(totalTime));
         kvDb.put(KvUtils.getJStackResultKey(timestamp), jstackResult);
         kvDb.put(KvUtils.getThreadInfoKey(timestamp), JacksonSerializer.serialize(threadInfos));
-        Futures.addCallback(momentCpuTimeExecutor.execute(pid), momentCpuUsageCallback(timestamp));
+        Executor executor = Executors.newSingleThreadExecutor();
+        Futures.addCallback(momentCpuTimeExecutor.execute(pid), momentCpuUsageCallback(timestamp), executor);
     }
 
     private FutureCallback<Map<Integer, Double>> momentCpuUsageCallback(final String timestamp) {

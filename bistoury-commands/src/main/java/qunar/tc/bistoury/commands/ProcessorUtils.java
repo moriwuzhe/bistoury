@@ -17,7 +17,7 @@
 
 package qunar.tc.bistoury.commands;
 
-import com.google.common.base.Charsets;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author zhenyu.nie created on 2018 2018/10/15 16:38
@@ -28,6 +28,6 @@ public class ProcessorUtils {
         if (input == null) {
             return null;
         }
-        return new String(input, Charsets.UTF_8);
+        return new String(input, StandardCharsets.UTF_8);
     }
 }

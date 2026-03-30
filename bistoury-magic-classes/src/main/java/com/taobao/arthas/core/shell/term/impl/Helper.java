@@ -1,11 +1,11 @@
 package com.taobao.arthas.core.shell.term.impl;
 
 
-import com.google.common.base.Charsets;
 import com.google.common.io.ByteSource;
+import java.nio.charset.StandardCharsets;
 import com.taobao.arthas.core.shell.ShellServerOptions;
 import com.taobao.arthas.core.util.LogUtil;
-import com.taobao.middleware.logger.Logger;
+import com.alibaba.arthas.deps.org.slf4j.Logger;
 import io.termd.core.readline.Keymap;
 
 import java.io.FileInputStream;
@@ -15,7 +15,7 @@ import java.io.InputStream;
  * @author <a href="mailto:julien@julienviet.com">Julien Viet</a>
  */
 public class Helper {
-    private static Logger logger = LogUtil.getArthasLogger();
+    private static Logger logger = LogUtil.getResultLogger();
 
     private static final String DEFAULT_INPUT_RC = "# In accordance with the Emacs/GNU Bash readline keyboard shortcuts\n" +
             "# http://www.catonmat.net/download/readline-emacs-editing-mode-cheat-sheet.pdf\n" +
@@ -65,7 +65,7 @@ public class Helper {
             "\"\\e[H\": beginning-of-line\n" +
             "\"\\e[F\": end-of-line";
 
-    private static final ByteSource DEFAULT_BYTE_SOURCE = ByteSource.wrap(DEFAULT_INPUT_RC.getBytes(Charsets.UTF_8));
+    private static final ByteSource DEFAULT_BYTE_SOURCE = ByteSource.wrap(DEFAULT_INPUT_RC.getBytes(StandardCharsets.UTF_8));
 
     public static Keymap loadKeymap() {
         return new Keymap(loadInputRcFile());

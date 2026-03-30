@@ -55,7 +55,7 @@ public class TabHandler extends ChannelDuplexHandler {
             char firstChar = parts.get(parts.size() - 1).trim().charAt(0);
             char lastChar = lastCommand.charAt(lastCommand.length() - 1);
 
-            final boolean isLastEmpty = CharMatcher.WHITESPACE.matches(lastChar);
+            final boolean isLastEmpty = CharMatcher.whitespace().matches(lastChar);
             if (!needAutoComplete(firstChar) && !isLastEmpty) {  // 特殊字符开头的不补全
                 ctx.writeAndFlush(UiResponses.createFinishResponse(data));
                 return;

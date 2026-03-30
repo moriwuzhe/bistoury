@@ -1,6 +1,5 @@
 package qunar.tc.bistoury.commands.arthas.telnet;
 
-import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharSource;
 import org.apache.commons.net.telnet.TelnetClient;
@@ -12,6 +11,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -44,7 +44,7 @@ public abstract class AbstractTelnet implements Telnet {
     public AbstractTelnet(TelnetClient client) throws IOException {
         this.client = client;
         this.in = client.getInputStream();
-        this.out = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), Charsets.UTF_8));
+        this.out = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), StandardCharsets.UTF_8));
         this.version = readVersionUtilPrompt();
         this.writer = new SettedWriter();
         this.resultProcessor = getProcessor(writer);
@@ -52,7 +52,7 @@ public abstract class AbstractTelnet implements Telnet {
 
     @Override
     public void write(String command) throws Exception {
-        if (command.getBytes(Charsets.UTF_8).length > 999) {
+        if (command.getBytes(StandardCharsets.UTF_8).length > 999) {
             throw new RuntimeException("the command length is too long，the max length is 999 bytes");
         }
         out.write(command);
@@ -117,7 +117,7 @@ public abstract class AbstractTelnet implements Telnet {
             return ZERO_BYTES;
         } else {
             if (logger.isDebugEnabled()) {
-                logger.debug("read data, [{}]", new String(buffer, 0, size, Charsets.UTF_8));
+                logger.debug("read data, [{}]", new String(buffer, 0, size, StandardCharsets.UTF_8));
             }
             isEnd = resultProcessor.process(buffer, 0, size);
             return writer.getAndReset();

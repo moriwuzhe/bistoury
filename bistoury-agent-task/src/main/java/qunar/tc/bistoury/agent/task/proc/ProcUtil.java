@@ -17,7 +17,6 @@
 
 package qunar.tc.bistoury.agent.task.proc;
 
-import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
@@ -28,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -49,7 +49,7 @@ public class ProcUtil {
     static {
         int cpuNum = 0;
         try {
-            cpuNum = Files.readLines(new File(cpuInfoFilePath), Charsets.UTF_8, new LineProcessor<Integer>() {
+            cpuNum = Files.readLines(new File(cpuInfoFilePath), StandardCharsets.UTF_8, new LineProcessor<Integer>() {
                 private int cpuNum = 0;
 
                 @Override

@@ -19,7 +19,6 @@ package qunar.tc.bistoury.instrument.agent;
 
 import qunar.tc.bistoury.instrument.spy.BistourySpys1;
 
-import java.arthas.Spy;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
@@ -36,13 +35,7 @@ import java.util.jar.JarFile;
  */
 public class AgentBootstrap2 {
 
-    private static final String ADVICEWEAVER = "com.taobao.arthas.core.advisor.AdviceWeaver";
-    private static final String ON_BEFORE = "methodOnBegin";
-    private static final String ON_RETURN = "methodOnReturnEnd";
-    private static final String ON_THROWS = "methodOnThrowingEnd";
-    private static final String BEFORE_INVOKE = "methodOnInvokeBeforeTracing";
-    private static final String AFTER_INVOKE = "methodOnInvokeAfterTracing";
-    private static final String THROW_INVOKE = "methodOnInvokeThrowTracing";
+    // Arthas 3.7.2 removed AdviceWeaver.methodOnBegin etc. API, now use SpyAPI directly
     private static final String RESET = "resetBistouryClassLoader";
     private static final String ARTHAS_CONFIGURE = "com.taobao.arthas.core.config.Configure";
     private static final String BISTOURY_BOOTSTRAP = "qunar.tc.bistoury.attach.arthas.server.BistouryBootstrap";
@@ -130,8 +123,21 @@ public class AgentBootstrap2 {
     // 这个方法和DefaultDebugger里面是一样的，但是这个地方不应该有依赖，所以两边都要写
     private static Class<?> findLibClass(Instrumentation inst, final String libClass) {
         if (libClass == null || "".equals(libClass)) {
-            ps.println("can not find lib class, [" + libClass + "]");
-            throw new IllegalStateException("can not find lib class, [" + libClass + "]");
+            // If no lib class specified, use the default system application class loader
+            for (Class clazz : inst.getAllLoadedClasses()) {
+                if ("sun.misc.Launcher$AppClassLoader".equals(clazz.getName())) {
+                    ps.println("[bistoury] Using default system AppClassLoader for empty libClass");
+                    return clazz;
+                }
+            }
+            ps.println("warning: sun.misc.Launcher$AppClassLoader not found, trying fallback");
+            // fallback: return first non-java class as the lib class loader
+            for (Class clazz : inst.getAllLoadedClasses()) {
+                if (!clazz.getName().startsWith("java.") && !clazz.getName().startsWith("javax.")) {
+                    ps.println("[bistoury] fallback to: " + clazz.getName());
+                    return clazz;
+                }
+            }
         }
 
         Class[] allLoadedClasses = inst.getAllLoadedClasses();
@@ -196,16 +202,18 @@ public class AgentBootstrap2 {
     }
 
     private static void initArthasSpy(ClassLoader classLoader) throws ClassNotFoundException, NoSuchMethodException {
-        Class<?> adviceWeaverClass = classLoader.loadClass(ADVICEWEAVER);
-        Method onBefore = adviceWeaverClass.getMethod(ON_BEFORE, int.class, ClassLoader.class, String.class,
-                String.class, String.class, Object.class, Object[].class);
-        Method onReturn = adviceWeaverClass.getMethod(ON_RETURN, Object.class);
-        Method onThrows = adviceWeaverClass.getMethod(ON_THROWS, Throwable.class);
-        Method beforeInvoke = adviceWeaverClass.getMethod(BEFORE_INVOKE, int.class, String.class, String.class, String.class, int.class);
-        Method afterInvoke = adviceWeaverClass.getMethod(AFTER_INVOKE, int.class, String.class, String.class, String.class, int.class);
-        Method throwInvoke = adviceWeaverClass.getMethod(THROW_INVOKE, int.class, String.class, String.class, String.class, int.class);
+        // Arthas 3.7.2 API changed:
+        // - Old: pass AdviceWeaver.methodXxx Method objects to Spy.initForAgentLauncher
+        // - New: Arthas 3.x uses SpyAPI directly, no longer needs to pass Method references
+        // - SpyAPI is already initialized internally, just call init()
         Method reset = AgentBootstrap2.class.getMethod(RESET);
-        Spy.initForAgentLauncher(classLoader, onBefore, onReturn, onThrows, beforeInvoke, afterInvoke, throwInvoke, reset);
+        Class<?> spyAPIClass = Class.forName("java.arthas.SpyAPI", true, classLoader);
+        Method initMethod = spyAPIClass.getMethod("init");
+        try {
+            initMethod.invoke(null);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to init Arthas SpyAPI", e);
+        }
     }
 
     private static void initQSpy(ClassLoader classLoader) throws ClassNotFoundException, NoSuchMethodException {
@@ -213,17 +221,17 @@ public class AgentBootstrap2 {
         Class<?> snapshotCaptureClass = classLoader.loadClass("qunar.tc.bistoury.instrument.client.debugger.SnapshotCapture");
         Class<?> agentMonitorClass = classLoader.loadClass("qunar.tc.bistoury.instrument.client.monitor.AgentMonitor");
         BistourySpys1.init(
-                globalContextClass.getMethod(BistourySpys1.HAS_BREAKPOINT_SET, String.class, int.class),
-                globalContextClass.getMethod(BistourySpys1.IS_HIT, String.class, int.class),
-                snapshotCaptureClass.getMethod(BistourySpys1.PUT_LOCAL_VARIABLE, String.class, Object.class),
-                snapshotCaptureClass.getMethod(BistourySpys1.PUT_FIELD, String.class, Object.class),
-                snapshotCaptureClass.getMethod(BistourySpys1.PUT_STATIC_FIELD, String.class, Object.class),
-                snapshotCaptureClass.getMethod(BistourySpys1.FILL_STACKTRACE, String.class, int.class, Throwable.class),
-                snapshotCaptureClass.getMethod(BistourySpys1.DUMP, String.class, int.class),
-                snapshotCaptureClass.getMethod(BistourySpys1.END_RECEIVE, String.class, int.class),
-                agentMonitorClass.getMethod(BistourySpys1.START_MONITOR),
-                agentMonitorClass.getMethod(BistourySpys1.STOP_MONITOR, String.class, long.class),
-                agentMonitorClass.getMethod(BistourySpys1.EXCEPTION_MONITOR, String.class)
+            globalContextClass.getMethod(BistourySpys1.HAS_BREAKPOINT_SET, String.class, int.class),
+            globalContextClass.getMethod(BistourySpys1.IS_HIT, String.class, int.class),
+            snapshotCaptureClass.getMethod(BistourySpys1.PUT_LOCAL_VARIABLE, String.class, Object.class),
+            snapshotCaptureClass.getMethod(BistourySpys1.PUT_FIELD, String.class, Object.class),
+            snapshotCaptureClass.getMethod(BistourySpys1.PUT_STATIC_FIELD, String.class, Object.class),
+            snapshotCaptureClass.getMethod(BistourySpys1.FILL_STACKTRACE, String.class, int.class, Throwable.class),
+            snapshotCaptureClass.getMethod(BistourySpys1.DUMP, String.class, int.class),
+            snapshotCaptureClass.getMethod(BistourySpys1.END_RECEIVE, String.class, int.class),
+            agentMonitorClass.getMethod(BistourySpys1.START_MONITOR),
+            agentMonitorClass.getMethod(BistourySpys1.STOP_MONITOR, String.class, long.class),
+            agentMonitorClass.getMethod(BistourySpys1.EXCEPTION_MONITOR, String.class)
         );
     }
 
@@ -233,6 +241,14 @@ public class AgentBootstrap2 {
 
             String[] argsArr = args.split(DELIMITER);
             // 传递的args参数分三个部分:agentJar路径、agentArgs、用户类, 分别是Agent的JAR包路径、期望传递到服务端的参数和用户应用中的类
+            if (argsArr.length < 3) {
+                // 最少需要前两个参数，libClass可以为空
+                String[] newArgsArr = new String[3];
+                newArgsArr[0] = argsArr.length >= 1 ? argsArr[0] : "";
+                newArgsArr[1] = argsArr.length >= 2 ? argsArr[1] : "";
+                newArgsArr[2] = "";
+                argsArr = newArgsArr;
+            }
             String agentJar = argsArr[0];
             final String agentArgs = argsArr[1];
             final String libClass = argsArr[2];
@@ -282,7 +298,12 @@ public class AgentBootstrap2 {
     }
 
     private static File getJarFile(File dir, String name) {
-        final String prefix = name.substring(0, name.indexOf('.'));
+        // Find the last dot to handle versions like 2.0.7 correctly
+        if (dir == null) {
+            throw new IllegalStateException("dir is null, agentJar=" + name);
+        }
+        final int lastDot = name.lastIndexOf('.');
+        final String prefix = name.substring(0, lastDot);
         File[] files = dir.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
@@ -290,7 +311,7 @@ public class AgentBootstrap2 {
             }
         });
         if (files == null || files.length != 1) {
-            throw new IllegalStateException("illegal jar files, " + Arrays.toString(files));
+            throw new IllegalStateException("illegal jar files, " + Arrays.toString(files) + " looking for name=" + name + " prefix=" + prefix + " in dir=" + dir.getAbsolutePath());
         }
         return files[0];
     }

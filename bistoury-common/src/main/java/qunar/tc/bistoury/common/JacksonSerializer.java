@@ -86,18 +86,18 @@ public class JacksonSerializer {
         }
     }
 
-    public static <T> T deSerialize(byte[] content, TypeReference typeReference) {
+    public static <T> T deSerialize(byte[] content, TypeReference<T> typeReference) {
         try {
-            return mapper.readValue(content, typeReference);
+            return (T) mapper.readValue(content, typeReference);
         } catch (IOException e) {
             logger.error("deserialize object error: {}", content, e);
             throw Throwables.propagate(e);
         }
     }
 
-    public static <T> T deSerialize(String content, TypeReference typeReference) {
+    public static <T> T deSerialize(String content, TypeReference<T> typeReference) {
         try {
-            return mapper.readValue(content, typeReference);
+            return (T) mapper.readValue(content, typeReference);
         } catch (IOException e) {
             logger.error("deserialize object error: {}", content, e);
             throw Throwables.propagate(e);

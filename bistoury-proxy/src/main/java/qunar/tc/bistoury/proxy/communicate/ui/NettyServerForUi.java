@@ -56,9 +56,9 @@ public class NettyServerForUi implements NettyServer {
 
     private static final int DEFAULT_WRITE_HIGH_WATER_MARK = 128 * 1024;
 
-    private static final EventLoopGroup BOSS = new NioEventLoopGroup(1, new ThreadFactoryBuilder().setNameFormat("ui-netty-server-boss").build());
+    private final EventLoopGroup bossGroup = new NioEventLoopGroup(1, new ThreadFactoryBuilder().setNameFormat("ui-netty-server-boss").build());
 
-    private static final EventLoopGroup WORKER = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors(), new ThreadFactoryBuilder().setNameFormat("ui-netty-server-worker").build());
+    private final EventLoopGroup workerGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors(), new ThreadFactoryBuilder().setNameFormat("ui-netty-server-worker").build());
 
     private final int port;
 
@@ -104,7 +104,7 @@ public class NettyServerForUi implements NettyServer {
                 .option(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK, DEFAULT_WRITE_LOW_WATER_MARK)
                 .option(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK, DEFAULT_WRITE_HIGH_WATER_MARK)
                 .channel(NioServerSocketChannel.class)
-                .group(BOSS, WORKER)
+                .group(bossGroup, workerGroup)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
@@ -142,8 +142,8 @@ public class NettyServerForUi implements NettyServer {
     @Override
     public void stop() {
         try {
-            BOSS.shutdownGracefully().sync();
-            WORKER.shutdownGracefully().sync();
+            bossGroup.shutdownGracefully().sync();
+            workerGroup.shutdownGracefully().sync();
             channel.close();
         } catch (InterruptedException e) {
             logger.error("ui server close error", e);

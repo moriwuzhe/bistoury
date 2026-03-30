@@ -58,6 +58,10 @@ public class Bootstrap {
 
             Tomcat tomcat = new Tomcat();
             tomcat.setPort(port);
+            // Fix: 正确设置HTTP连接器端口，tomcat.setPort()默认设置的是shutdown端口
+            if (tomcat.getConnector() != null) {
+                tomcat.getConnector().setPort(port);
+            }
 
             tomcat.setBaseDir(config.getString("tomcat.basedir"));
             tomcat.getHost().setAutoDeploy(false);

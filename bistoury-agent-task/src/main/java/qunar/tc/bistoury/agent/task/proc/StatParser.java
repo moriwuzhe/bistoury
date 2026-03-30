@@ -18,7 +18,6 @@
 package qunar.tc.bistoury.agent.task.proc;
 
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
 import com.google.common.io.Files;
 import org.slf4j.Logger;
@@ -26,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -73,7 +73,7 @@ class StatParser {
     }
 
     private List<String> getInfoList(File file) throws IOException {
-        return SPACE_SPLITTER.splitToList(Files.toString(file, Charsets.UTF_8));
+        return SPACE_SPLITTER.splitToList(Files.toString(file, StandardCharsets.UTF_8));
     }
 
     public static StatParser getInstance() {

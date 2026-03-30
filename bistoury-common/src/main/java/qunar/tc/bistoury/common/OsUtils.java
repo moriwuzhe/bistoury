@@ -1,9 +1,9 @@
 package qunar.tc.bistoury.common;
 
-import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 /**
@@ -34,7 +34,7 @@ public class OsUtils {
             return false;
         }
         try {
-            String value = Files.readFirstLine(paranoidFile, Charsets.UTF_8);
+            String value = Files.readFirstLine(paranoidFile, StandardCharsets.UTF_8);
             int paranoid = Integer.parseInt(value);
             if (paranoid >= 2) {
                 return false;

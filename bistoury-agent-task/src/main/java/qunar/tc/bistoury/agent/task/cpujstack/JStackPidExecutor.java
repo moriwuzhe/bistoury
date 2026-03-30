@@ -17,7 +17,6 @@
 
 package qunar.tc.bistoury.agent.task.cpujstack;
 
-import com.google.common.base.Charsets;
 import com.google.common.io.ByteStreams;
 import com.sun.tools.attach.VirtualMachine;
 import org.slf4j.Logger;
@@ -26,6 +25,7 @@ import sun.tools.attach.HotSpotVirtualMachine;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author cai.wen
@@ -59,7 +59,7 @@ public class JStackPidExecutor implements PidExecutor {
     private String readJStackOutput(HotSpotVirtualMachine hotSpotVirtualMachine) throws IOException {
         try (InputStream inputStream = hotSpotVirtualMachine.remoteDataDump(new String[0])) {
             byte[] bytes = ByteStreams.toByteArray(inputStream);
-            return new String(bytes, Charsets.UTF_8);
+            return new String(bytes, StandardCharsets.UTF_8);
         }
     }
 }

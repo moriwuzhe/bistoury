@@ -40,11 +40,11 @@
             <artifactId>bistoury-instrument-client</artifactId>
             <scope>${bistoury.scope}</scope>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>bistoury-attach-arthas</artifactId>
             <scope>${bistoury.scope}</scope>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>bistoury-magic-classes</artifactId>

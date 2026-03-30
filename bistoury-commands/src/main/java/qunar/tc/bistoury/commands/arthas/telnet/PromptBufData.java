@@ -1,6 +1,6 @@
 package qunar.tc.bistoury.commands.arthas.telnet;
 
-import com.google.common.base.Charsets;
+import java.nio.charset.StandardCharsets;
 
 import static qunar.tc.bistoury.commands.arthas.telnet.CommunicateUtil.MAX_PROMPT_LENGTH;
 
@@ -49,7 +49,7 @@ class PromptBufData {
     @Override
     public String toString() {
         return "PromptBufData{" +
-                "data=" + new String(data, 0, length, Charsets.UTF_8) +
+                "data=" + new String(data, 0, length, StandardCharsets.UTF_8) +
                 '}';
     }
 }

@@ -1,7 +1,7 @@
 package qunar.tc.bistoury.commands.profiler;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
+import java.nio.charset.StandardCharsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -190,7 +190,7 @@ public class ProfilerFileForProxyTask implements Task {
         }
 
         private void doWriteFileReadError(ResponseHandler handler, String detailMsg) {
-            handler.handle(REQ_TYPE_PROFILER_FILE_ERROR.getCode(), detailMsg.getBytes(Charsets.UTF_8), ImmutableMap.<String, String>of());
+            handler.handle(REQ_TYPE_PROFILER_FILE_ERROR.getCode(), detailMsg.getBytes(StandardCharsets.UTF_8), ImmutableMap.<String, String>of());
         }
 
         private Map<String, String> getFileInfoHeader(File downloadFile) {

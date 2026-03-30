@@ -146,7 +146,7 @@ public class ProfilerController {
         String url = String.format(profilerIsAnalyzedUrl, proxyInfo.getIp(), proxyInfo.getTomcatPort(), profilerId);
         try {
             byte[] content = getBytesFromUrl(url);
-            ApiResult<Map<String, String>> response = JacksonSerializer.deSerialize(content, analyzerResponse);
+            ApiResult<Map<String, String>> response = (ApiResult<Map<String, String>>) JacksonSerializer.deSerialize(content, analyzerResponse);
             return response.getData().get("name");
         } catch (Exception e) {
             LOGGER.warn("get profiler error. url: {}", url);

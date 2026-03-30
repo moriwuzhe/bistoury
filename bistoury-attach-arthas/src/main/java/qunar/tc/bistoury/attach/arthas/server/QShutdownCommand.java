@@ -57,8 +57,11 @@ public class QShutdownCommand extends AnnotatedCommand {
             process.write("Bistoury Server is going to shut down...\n");
         } finally {
             process.end();
-            ShellServer server = process.session().getServer();
-            server.close();
+            @SuppressWarnings("unchecked")
+            ShellServer server = (ShellServer) process.session().get("SERVER");
+            if (server != null) {
+                server.close();
+            }
         }
     }
 

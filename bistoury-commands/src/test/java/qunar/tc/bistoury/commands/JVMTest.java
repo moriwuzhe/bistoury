@@ -53,7 +53,7 @@ public class JVMTest {
                 t.printStackTrace();
                 latch.countDown();
             }
-        });
+        }, Runnable::run);
         latch.await();
 
     }

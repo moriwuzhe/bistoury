@@ -1,43 +1,53 @@
-# kdiff3 ignore
-*.orig
-
-# maven ignore
+# Maven
 target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.maven/tmp
 
-# eclipse ignore
-.settings/
-.project
-.classpath
-classes/**
-
-# idea ignore
+# IDE
 .idea/
-*.ipr
 *.iml
+*.ipr
 *.iws
-
-# temp ignore
+.vscode/
+*.swp
+*.swo
+*~
 *.log
-*.cache
-*.diff
-*.patch
-*.tmp
 
-# system ignore
+# Compiled class files
+*.class
+
+# Jar files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# OS
 .DS_Store
 Thumbs.db
 
-# package ignore (optional)
-# *.jar
-# *.war
-# *.zip
-# *.tar
-# *.tar.gz
+# Logs
+logs
+*.log
 
-# embedded tomcat
-tomcat.8080/**
+# Build
+build/
+out/
 
-# pods ignore
-Pods/
-
-bistoury-*.tar.gz 
+# Local config
+*.local

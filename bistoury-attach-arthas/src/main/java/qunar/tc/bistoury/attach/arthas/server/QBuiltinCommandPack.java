@@ -20,9 +20,8 @@ package qunar.tc.bistoury.attach.arthas.server;
 import com.taobao.arthas.core.command.BuiltinCommandPack;
 import com.taobao.arthas.core.command.basic1000.*;
 import com.taobao.arthas.core.command.hidden.JulyCommand;
-import com.taobao.arthas.core.command.hidden.OptionsCommand;
 import com.taobao.arthas.core.command.hidden.ThanksCommand;
-import com.taobao.arthas.core.command.klass100.*;
+import com.taobao.arthas.core.command.klass1000.*;
 import com.taobao.arthas.core.command.logger.LoggerCommand;
 import com.taobao.arthas.core.command.monitor200.*;
 import com.taobao.arthas.core.shell.command.Command;
@@ -44,7 +43,7 @@ import java.util.List;
 /**
  * @author zhenyu.nie created on 2018 2018/11/22 16:39
  */
-public class QBuiltinCommandPack extends BuiltinCommandPack {
+public class QBuiltinCommandPack {
 
     private static List<Command> commands = new ArrayList<Command>();
 
@@ -52,7 +51,9 @@ public class QBuiltinCommandPack extends BuiltinCommandPack {
         initCommands();
     }
 
-    @Override
+    public QBuiltinCommandPack() {
+    }
+
     public List<Command> commands() {
         return commands;
     }
@@ -96,7 +97,7 @@ public class QBuiltinCommandPack extends BuiltinCommandPack {
         commands.add(Command.create(HeapDumpCommand.class));
         commands.add(Command.create(VMOptionCommand.class));
         commands.add(Command.create(LoggerCommand.class));
-        commands.add(Command.create(QStopCommand.class));
+        commands.add(Command.create(QShutdownCommand.class));
 
         // qunar command
         commands.add(Command.create(AgentInfoCommand.class));

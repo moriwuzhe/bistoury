@@ -1,9 +1,8 @@
 package qunar.tc.bistoury.common;
 
-import com.google.common.base.Charsets;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 
 /**
@@ -16,7 +15,7 @@ public class AESCryptUtils {
     private static final byte[] EMPTY_BYTES = new byte[0];
     private static final String AES_ALGORITHM = "AES";
     // 请不要修改此secret key
-    private static final byte[] SECRET_KEY = "Q-V6TJrJeqzt_79q".getBytes(Charsets.UTF_8);
+    private static final byte[] SECRET_KEY = "Q-V6TJrJeqzt_79q".getBytes(StandardCharsets.UTF_8);
 
     private static final Key key = new SecretKeySpec(SECRET_KEY, AES_ALGORITHM);
 
