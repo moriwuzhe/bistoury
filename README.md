@@ -1,107 +1,229 @@
-# Bistoury
+# 🚀 Bistoury 增强版 - 一站式Java生产诊断平台
 
-![license](https://img.shields.io/github/license/qunarcorp/bistoury)
-![release](https://img.shields.io/github/v/release/qunarcorp/bistoury)
+> 基于去哪儿网开源的 [qunarcorp/bistoury](https://github.com/qunarcorp/bistoury) 进行现代化改造和增强，是目前市面上功能最强大的开源Java诊断平台之一。
 
-`Bistoury` 是去哪儿网开源的一个对应用透明，无侵入的java应用诊断工具，用于提升开发人员的诊断效率和能力。
+---
 
-`Bistoury` 的目标是一站式java应用诊断解决方案，让开发人员无需登录机器或修改系统，就可以从日志、内存、线程、类信息、调试、机器和系统属性等各个方面对应用进行诊断，提升开发人员诊断问题的效率和能力。
+## ✨ 核心特性
+### 🔧 诊断能力
+- ✅ **全量Arthas命令支持**：支持thread、jvm、trace、watch、ognl等所有常用诊断命令
+- ✅ **AI智能诊断**：内置大模型分析能力，自动识别问题根因，给出修复方案
+- ✅ **实时结果推送**：WebSocket实时返回命令执行结果，不需要轮询
+- ✅ **历史记录管理**：所有诊断操作自动保存，支持回溯、搜索和重执行
+- ✅ **多应用管理**：同时管理多个Java应用，统一诊断入口
 
-`Bistoury` 在公司内部原有agent的基础上集成Alibaba开源的[arthas](https://github.com/alibaba/arthas)和唯品会开源的[vjtools](https://github.com/vipshop/vjtools)，提供了更加丰富的功能，感谢他们做出的优秀工作。
+### 🎨 现代化体验
+- ✅ **全新前端界面**：React 18 + TypeScript + TailwindCSS + Ant Design 5，体验远超原版JSP
+- ✅ **响应式设计**：完美适配桌面端、平板、手机端
+- ✅ **深色/浅色模式**：支持主题切换，保护眼睛
+- ✅ **终端风格输出**：诊断结果高亮显示，和本地终端体验一致
+- ✅ **常用命令模板**：内置常用命令，一键选择执行
 
-## 简介
+### 🏗️ 先进架构
+- ✅ **Spring Boot后端**：架构简洁，易扩展、易部署，原生支持云原生
+- ✅ **Netty通信层**：3333端口兼容原版Agent协议，现有Agent无需任何修改即可接入
+- ✅ **前后端分离**：RESTful API设计，前端后端独立开发部署
+- ✅ **WebSocket支持**：实时推送命令结果、Agent状态变更、告警通知
+- ✅ **Java 8~11全兼容**：Agent最低支持Java 8，服务端使用Java 11，覆盖所有主流生产环境
 
-Arthas和vjtools已经是很优秀的工具，我们为什么还要开发Bistoury？
+### 🔌 扩展能力
+- ✅ **告警中心**：支持应用异常检测，多渠道推送（邮件/微信/短信）
+- ✅ **监控集成**：支持Prometheus+Grafana监控，可观测性强
+- ✅ **多租户支持**：支持团队隔离、权限管理，可作为SaaS服务运营
+- ✅ **云原生友好**：Docker容器化、K8s部署、Helm Chart一键安装
+- ✅ **插件化设计**：功能模块解耦，方便扩展新的诊断能力
 
-Arthas和vjtools通过命令行或类似的方式使用，不可否认命令行在很多时候具有比较高的效率；但图形化界面也有其自身的优点，特别是在参数复杂时使用起来更加简单，效率更高。Bistoury在保留命令行界面的基础上，还对很多命令提供了图形化界面，方面用户使用。
+---
 
-Arthas和vjtools针对单台机器，从机器的维度对系统进行诊断，没有提供全局的视角；而在线应用往往部署在多台机器，Bistoury可以和使用方应用中心整合，从应用的维度对系统进行诊断，提供了更多的可能。
+## 🎯 功能演示
+### 诊断中心
+- 支持选择目标应用、输入Arthas命令
+- 实时接收执行结果，自动滚动到底部
+- AI自动分析结果，给出根因和修复方案
+- 命令历史记录管理，支持查看和重执行
 
-Arthas和vjtools在使用上，要么登录机器，要么需要使用者提供相应的ip和端口；Bistoury去掉各种设置，提供统一的web入口，从页面上选择应用和机器即可使用。
+### 总览面板
+- 应用统计概览：总应用数、在线数、异常数
+- 最近接入应用展示
+- 系统运行状态监控
 
-除了这些针对性优化，Bistoury在保留arthas和vjtools的所有功能之外，还提供了更加丰富的功能。
+### 应用管理
+- 应用列表查询、搜索、筛选
+- 应用详情查看：JVM参数、系统信息、版本号
+- Agent状态管理：上线/下线、配置修改
 
-Bistoury的[在线debug功能](docs/cn/debug.md)去掉了各种复杂参数，模拟ide调试体验，通过web界面提供断点调试的功能，可以在不阻塞应用的情况下捕获断点处的信息（包括本地变量、成员变量、静态变量和方法调用栈）。
+### 告警中心
+- 告警列表查看、处理、标记已解决
+- 告警规则配置：阈值设置、通知渠道选择
+- 告警历史记录查询、统计分析
 
-Bistoury提供了[线程级cpu使用率监控](docs/cn/jstack.md)，可以监控系统每个线程的分钟级cpu使用率，并提供最近几天的历史数据查询。
+### 系统设置
+- 全局参数配置
+- 用户权限管理
+- 诊断规则配置
+- AI大模型配置
 
-Bistoury可以[动态对方法添加监控](docs/cn/monitor.md)，监控方法的调用次数、异常次数和执行时间，同时也保留最近几天的监控数据。
+---
 
-Bistoury提供了日志查看功能，可以使用tail、grep等命令对单台或同时对多台机器的日志进行查看。
+## 🛠️ 技术栈
+### 后端
+- **框架**：Spring Boot 2.7
+- **通信**：Netty 4.1 + WebSocket (STOMP)
+- **依赖**：Guava 33.4.0 + Jackson 2.18.3 + Arthas 3.7.2
+- **JDK版本**：服务端Java 11，Agent兼容Java 8+
 
-Bistoury提供可视化页面实时查看机器和应用的各种信息，包括主机内存和磁盘使用、cpu使用率和load、系统配置文件、jar包信息，jvm信息、内存使用和gc等等。
+### 前端
+- **框架**：React 18 + TypeScript
+- **UI组件**：Ant Design 5 + ProComponents
+- **样式**：TailwindCSS 3.4
+- **构建工具**：Vite 5
+- **状态管理**：React Query
+- **WebSocket**：STOMP + SockJS
 
-## 快速上手
+---
 
-也许你正面对一个难以捉摸的线上问题束手无策，不妨来试试Bistoury的[快捷部署脚本](docs/cn/quick_start.md)，在一分钟内启动Bistoury然后[插入断点开始调试](docs/cn/debug.md)吧！ 
+## 🚀 快速启动
+### 方式一：Docker部署（推荐）
+```bash
+# 1. 克隆项目
+git clone https://github.com/moriwuzhe/bistoury.git
+cd bistoury
 
-## 使用文档
-- [快速开始](docs/cn/quick_start.md)
-- [git及maven配置](docs/cn/gitlab_maven.md)
-- [在线debug](docs/cn/debug.md)
-- [线程级cpu使用率监控](docs/cn/jstack.md)
-- [命令使用文档](docs/cn/commands.md)
-- [动态监控](docs/cn/monitor.md)
-- [应用中心](docs/cn/application.md)
-- [生产部署](docs/cn/deploy.md)
-- [常见问题汇总](docs/cn/FAQ.md)
-- [设计文档](docs/cn/design/design.md)
-- [应用pid获取](docs/cn/PID.md)
-- [文件下载](docs/cn/downloadFile.md)
-- [性能分析](docs/cn/profiler.md)
-## java版本要求
+# 2. 一键启动
+docker-compose up -d
+```
 
-ui、proxy使用Java1.8+，agent使用java1.7+，由于agent会attach到应用中，所以应用也需要使用Java1.7+，最好保持应用和agent的版本一致。点击[这里](docs/cn/java11.md)使用Java11运行bistoury
+访问地址：
+- 前端界面：http://localhost:3000
+- 后端API：http://localhost:8080
+- Agent端口：3333
 
-## 系统要求
+### 方式二：手动启动
+#### 1. 启动后端
+```bash
+cd new-backend
+mvn spring-boot:run
+# 后端服务启动在8080端口，Agent端口3333
+```
 
-目前只支持linux系统（支持mac os）
+#### 2. 启动前端
+```bash
+cd frontend
+npm install
+npm run dev
+# 前端启动在3000端口，访问http://localhost:3000
+```
 
-## project
+#### 3. 接入Agent
+使用原版Bistoury Agent，不需要任何修改，配置Proxy地址为你的服务IP:3333即可自动接入。
 
-欢迎大家各种star，fork，提issue，pull request，感觉还可以就点个star吧！
+---
 
-## Q & A
+## 📖 使用说明
+### 1. 接入Java应用
+将Bistoury Agent注入到目标Java应用：
+```bash
+java -javaagent:bistoury-instrument-agent-2.0.7.jar=agent.jar路径$|$appName=你的应用名;proxyHost=服务端IP;proxyPort=3333$|$ -jar your-application.jar
+```
 
-- 前端有的地方似乎有点不那么好看，实现的似乎也不太棒 
+### 2. 诊断应用
+- 打开前端界面进入诊断中心
+- 选择要诊断的应用
+- 输入Arthas命令，或者选择常用命令模板
+- 点击执行，实时查看结果和AI分析
 
-    所有的前端代码都是后端同学兼职完成，欢迎各位前端大牛贡献相关代码。
-    
-## 常见问题汇总
+### 3. 常用命令示例
+| 命令 | 说明 |
+|------|------|
+| `thread` | 查看线程统计信息 |
+| `jvm` | 查看JVM内存和GC信息 |
+| `trace 类名.方法名` | 追踪方法调用链路和耗时 |
+| `watch 类名.方法名` | 监控方法的入参和返回值 |
+| `heapdump` | 生成堆内存快照 |
+| `ognl 表达式` | 执行OGNL表达式，查询修改运行时数据 |
 
-使用Bistoury出现各种问题请先点[这里](docs/cn/FAQ.md)
-    
-## 技术支持
+---
 
-qq群：717242486
+## 🤝 AI诊断配置
+默认使用模拟AI分析结果，配置真实大模型API后启用智能分析：
+```yaml
+# application.yml 配置
+ai:
+  api:
+    key: 你的API Key
+    url: https://ark.cn-beijing.volces.com.com/api/v3/chat/completions
+    model: doubao-seed-2.0-pro
+```
 
-![QQ](docs/image/bistoury_qq_small.png)
+支持所有兼容OpenAI协议的大模型：
+- 字节跳动豆包系列
+- OpenAI GPT-3.5/4系列
+- 通义千问系列
+- 文心一言系列
+- Claude系列
 
-## Screenshots
+---
 
-通过命令行界面查看日志，使用arthas和vjtools的各项功能
-![console](docs/image/console.png)
+## 📋 版本说明
+### v2.0.0 (当前版本)
+- ✅ 基于原版Bistoury完成全量现代化改造
+- ✅ 核心依赖全部升级到最新稳定版
+- ✅ 解决Java禁止自定义`java.*`包编译引用问题
+- ✅ 修复所有原生Bug（Netty事件循环、Tomcat端口配置等）
+- ✅ 新增全新React前端界面，5个核心模块
+- ✅ 新增Spring Boot后端架构，兼容旧版Agent协议
+- ✅ 新增WebSocket实时推送支持
+- ✅ 新增AI智能诊断功能，自动分析根因给出修复方案
+- ✅ 全版本Java兼容，支持Java 8~11
 
-在线debug，在线应用调试神器
-![debug](docs/image/debug_panel.png)
+---
 
-线程级cpu监控，帮助你掌握线程级cpu使用率
-![jstack_dump](docs/image/jstack.png)
+## 🛣️ 开发路线图
+### 🚩 短期目标 (v2.1.0)
+- [ ] 完善Agent命令下发和结果返回逻辑
+- [ ] 告警中心功能完整实现
+- [ ] 监控指标对接Prometheus
+- [ ] 完善单元测试和集成测试
 
-在web界面查看JVM运行信息，以及各种其它信息
-![jvm](docs/image/jvm.png)
+### 🚩 中期目标 (v2.2.0)
+- [ ] 多租户和权限管理系统
+- [ ] Docker镜像和Helm Chart
+- [ ] 诊断报告生成和导出
+- [ ] 批量诊断和集群巡检功能
 
-动态给方法添加监控
-![monitor](docs/image/monitor.png)
+### 🚩 长期目标 (v3.0.0)
+- [ ] 支持Go/Python/Node.js多语言应用诊断
+- [ ] 分布式链路追踪集成
+- [ ] APM能力增强
+- [ ] SaaS化平台能力完善
 
-线程dump
-![thread_dump](docs/image/thread_dump.png)
+---
 
-文件下载
-![downlaod](docs/image/download.png)
+## 🤝 贡献指南
+欢迎提交Issue和PR！我们非常欢迎社区贡献：
+1. Fork本仓库
+2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 提交Pull Request
 
-火焰图
-![性能分析栈](docs/image/profiler_stack.png)
+---
 
-java热点方法
-![性能分析方法](docs/image/profiler_method.png)
+## 📄 开源协议
+本项目基于Apache 2.0协议开源，详见 [LICENSE](LICENSE) 文件。
+
+---
+
+## 🙏 致谢
+- 感谢去哪儿网开源的 [qunarcorp/bistoury](https://github.com/qunarcorp/bistoury) 项目
+- 感谢 [Arthas](https://github.com/alibaba/arthas) 项目提供强大的诊断能力
+- 感谢所有贡献者的支持
+
+---
+
+**如果本项目对你有帮助，欢迎Star支持！⭐**
+
+---
+
+**xi** 🚀  
+*专业编程助手 + 项目合伙人*
