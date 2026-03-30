@@ -1,154 +1,260 @@
-import { useQuery } from 'react-query'
-import { Typography, Button, Card, Row, Col, Statistic, Tag, Spin, Alert } from 'antd'
+import React, { useState, useEffect } from 'react'
 import {
-  CheckCircleOutlined,
-  WarningOutlined,
-  ExclamationCircleOutlined,
-  CloudServerOutlined
-} from '@ant-design/icons'
-import { agentApi } from '../services/api'
+  PageContainer,
+  StatisticCard,
+  ProCard,
+  Trend,
+  ProList,
+  Tag,
+  Space,
+  Button,
+} from '@ant-design/pro-components'
+import { ArrowUpOutlined, ArrowDownOutlined, AppstoreOutlined, WarningOutlined, BugOutlined, RiseOutlined } from '@ant-design/icons'
+import { Badge, Avatar, List } from 'antd'
+import api from '../services/api'
 
-const { Title } = Typography
+const Dashboard: React.FC = () => {
+  const [stats, setStats] = useState({
+    total: 0,
+    online: 0,
+    warning: 0,
+    error: 0,
+    tasks: 0,
+  })
 
-export default function Dashboard() {
-  // 获取应用统计数据
-  const { data: statsData, isLoading: statsLoading, error: statsError } = useQuery(
-    'agentStats',
-    () => agentApi.getStats(),
-    {
-      fallbackData: {
-        data: {
-          total: 42,
-          running: 38,
-          warning: 3,
-          error: 1
-        }
+  const [recentAlerts, setRecentAlerts] = useState<any[]>([])
+  const [recentApps, setRecentApps] = useState<any[]>([])
+
+  // 获取统计数据
+  const fetchStats = async () => {
+    try {
+      // 获取告警统计
+      const alertStats = await api.get('/api/alert/stats')
+      
+      // 暂时模拟应用统计，后面对接真实API
+      const agentStats = {
+        total: 5,
+        running: 4,
       }
-    }
-  )
 
-  // 获取应用列表
-  const { data: agentsData, isLoading: agentsLoading, error: agentsError } = useQuery(
-    'agentList',
-    () => agentApi.getList(),
-    {
-      fallbackData: {
-        data: [
-          { id: 1, name: '订单服务', ip: '192.168.1.101', status: 'running', lastActive: '1分钟前' },
-          { id: 2, name: '支付服务', ip: '192.168.1.102', status: 'running', lastActive: '2分钟前' },
-          { id: 3, name: '用户服务', ip: '192.168.1.103', status: 'warning', lastActive: '5分钟前' },
-          { id: 4, name: '商品服务', ip: '192.168.1.104', status: 'error', lastActive: '10分钟前' },
-        ]
-      }
-    }
-  )
-
-  const appStats = statsData?.data || { total: 0, running: 0, warning: 0, error: 0 }
-  const recentAgents = agentsData?.data || []
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'running': return 'success'
-      case 'warning': return 'warning'
-      case 'error': return 'error'
-      default: return 'default'
+      setStats({
+        total: agentStats.total || 0,
+        online: agentStats.running || 0,
+        warning: alertStats.warning || 0,
+        error: alertStats.critical || alertStats.error || 0,
+        tasks: 1234,
+      })
+    } catch (error) {
+      console.error('获取统计数据失败：', error)
     }
   }
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'running': return <CheckCircleOutlined />
-      case 'warning': return <WarningOutlined />
-      case 'error': return <ExclamationCircleOutlined />
-      default: return <WarningOutlined />
+  // 获取最近告警
+  const fetchRecentAlerts = async () => {
+    try {
+      const alerts = await api.get('/api/alert/list', {
+        params: {
+          status: 'pending',
+        },
+      })
+      setRecentAlerts((alerts as any[]).slice(0, 5))
+    } catch (error) {
+      console.error('获取最近告警失败：', error)
     }
+  }
+
+  // 获取最近接入的应用（模拟数据）
+  const fetchRecentApps = () => {
+    const mockApps = [
+      {
+        id: 'agent-1',
+        name: '订单服务',
+        ip: '192.168.1.101',
+        status: 'online',
+        time: '5分钟前',
+        avatar: 'https://api.dicebear.com/7.x/identicon/svg?seed=order',
+      },
+      {
+        id: 'agent-2',
+        name: '支付服务',
+        ip: '192.168.1.102',
+        status: 'online',
+        time: '10分钟前',
+        avatar: 'https://api.dicebear.com/7.x/identicon/svg?seed=pay',
+      },
+      {
+        id: 'agent-3',
+        name: '用户服务',
+        ip: '192.168.1.103',
+        status: 'warning',
+        time: '15分钟前',
+        avatar: 'https://api.dicebear.com/7.x/identicon/svg?seed=user',
+      },
+      {
+        id: 'agent-4',
+        name: '商品服务',
+        ip: '192.168.1.104',
+        status: 'error',
+        time: '30分钟前',
+        avatar: 'https://api.dicebear.com/7.x/identicon/svg?seed=product',
+      },
+    ]
+    setRecentApps(mockApps)
+  }
+
+  // 页面加载时获取数据
+  useEffect(() => {
+    fetchStats()
+    fetchRecentAlerts()
+    fetchRecentApps()
+    
+    // 每隔30秒刷新一次
+    const interval = setInterval(() => {
+      fetchStats()
+      fetchRecentAlerts()
+    }, 30000)
+    
+    return () => clearInterval(interval)
+  }, [])
+
+  // 状态对应的颜色
+  const statusColors: Record<string, string> = {
+    online: 'success',
+    offline: 'default',
+    warning: 'warning',
+    error: 'error',
   }
 
   return (
-    <div className="p-6 bg-gray-50">
-      <div className="mb-6">
-        <Title level={2}>总览</Title>
-        <p className="text-gray-500">欢迎使用 Bistoury 增强版诊断平台</p>
+    <PageContainer
+      header={{
+        title: '总览',
+        subTitle: '系统运行状态总览',
+      }}
+    >
+      {/* 统计卡片 */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <StatisticCard
+          title="接入应用总数"
+          value={stats.total}
+          icon={<AppstoreOutlined />}
+          suffix="个"
+          trend={<Trend up>较昨日 +2</Trend>}
+        />
+        <StatisticCard
+          title="在线应用"
+          value={stats.online}
+          valueStyle={{ color: '#3f8600' }}
+          suffix="个"
+          trend={<Trend up>在线率 {stats.total > 0 ? Math.round(stats.online / stats.total * 100) : 0}%</Trend>}
+        />
+        <StatisticCard
+          title="告警数"
+          value={stats.warning + stats.error}
+          valueStyle={{ color: '#cf1322' }}
+          icon={<WarningOutlined />}
+          trend={<Trend down>较昨日 -3</Trend>}
+        />
+        <StatisticCard
+          title="诊断任务数"
+          value={stats.tasks}
+          icon={<BugOutlined />}
+          suffix="次"
+          trend={<Trend up>今日 +156</Trend>}
+        />
       </div>
 
-      {/* 错误提示 */}
-      {(statsError || agentsError) && (
-        <Alert
-          message="后端接口连接异常"
-          description="当前使用模拟数据展示，后端服务恢复后自动切换为真实数据"
-          type="warning"
-          showIcon
-          className="mb-6"
-        />
-      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* 最近告警 */}
+        <ProCard 
+          title="最近告警" 
+          extra={<Button type="link" onClick={() => window.location.href = '/alert'}>查看全部</Button>}
+        >
+          {recentAlerts.length > 0 ? (
+            <List
+              dataSource={recentAlerts}
+              renderItem={(item) => (
+                <List.Item
+                  actions={[
+                    <Button type="link" size="small" href={`/alert`}>处理</Button>
+                  ]}
+                >
+                  <List.Item.Meta
+                    avatar={<Badge status={statusColors[item.level]} />}
+                    title={
+                      <Space>
+                        <span>{item.title}</span>
+                        <Tag color={statusColors[item.level]} size="small">
+                          {item.level === 'warning' ? '警告' : item.level === 'error' ? '错误' : '严重'}
+                        </Tag>
+                      </Space>
+                    }
+                    description={
+                      <div className="text-sm text-gray-500">
+                        <span>{item.appName} ({item.agentId})</span>
+                        <span className="ml-4">{item.alertTime}</span>
+                      </div>
+                    }
+                  />
+                </List.Item>
+              )}
+            />
+          ) : (
+            <div className="text-center py-8 text-gray-400">
+              暂无未处理告警
+            </div>
+          )}
+        </ProCard>
 
-      {/* 加载状态 */}
-      <Spin spinning={statsLoading || agentsLoading} tip="数据加载中...">
-        <Row gutter={16} className="mb-6">
-          <Col span={6}>
-            <Card>
-              <Statistic
-                title="应用总数"
-                value={appStats.total}
-                prefix={<CloudServerOutlined className="text-blue-600" />}
-              />
-            </Card>
-          </Col>
-          <Col span={6}>
-            <Card>
-              <Statistic
-                title="运行正常"
-                value={appStats.running}
-                valueStyle={{ color: '#3f8600' }}
-                prefix={<CheckCircleOutlined />}
-              />
-            </Card>
-          </Col>
-          <Col span={6}>
-            <Card>
-              <Statistic
-                title="警告"
-                value={appStats.warning}
-                valueStyle={{ color: '#cf8d00' }}
-                prefix={<WarningOutlined />}
-              />
-            </Card>
-          </Col>
-          <Col span={6}>
-            <Card>
-              <Statistic
-                title="异常"
-                value={appStats.error}
-                valueStyle={{ color: '#cf1322' }}
-                prefix={<ExclamationCircleOutlined />}
-              />
-            </Card>
-          </Col>
-        </Row>
+        {/* 最近接入应用 */}
+        <ProCard 
+          title="最近接入应用" 
+          extra={<Button type="link" onClick={() => window.location.href = '/app'}>查看全部</Button>}
+        >
+          <ProList
+            dataSource={recentApps}
+            metas={{
+              avatar: {},
+              title: {},
+              description: {},
+              actions: {},
+            }}
+            renderItem={(item) => (
+              <ProList.Item
+                actions={[
+                  <Button type="link" size="small" onClick={() => window.location.href = `/diagnose?agentId=${item.id}`}>诊断</Button>
+                ]}
+              >
+                <ProList.Item.Meta
+                  avatar={<Avatar src={item.avatar} size="small" />}
+                  title={
+                    <Space>
+                      <span>{item.name}</span>
+                      <Badge status={statusColors[item.status]} text={item.status === 'online' ? '在线' : item.status === 'warning' ? '警告' : '异常'} />
+                    </Space>
+                  }
+                  description={
+                    <div className="text-sm text-gray-500">
+                      <span>{item.ip}</span>
+                      <span className="ml-4">{item.time}接入</span>
+                    </div>
+                  }
+                />
+              </ProList.Item>
+            )}
+          />
+        </ProCard>
+      </div>
 
-        <Card title="最近接入的应用" extra={<Button type="primary" size="small">查看全部</Button>}>
-          <div className="grid grid-cols-2 gap-4">
-            {recentAgents.map((app: any) => (
-              <Card key={app.id} size="small" hoverable>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <div className="font-medium text-lg">{app.name}</div>
-                    <div className="text-sm text-gray-500">{app.ip}</div>
-                    <div className="text-xs text-gray-400 mt-1">最后活跃：{app.lastActive}</div>
-                  </div>
-                  <Tag color={getStatusColor(app.status)} icon={getStatusIcon(app.status)}>
-                    {app.status === 'running' ? '正常' : app.status === 'warning' ? '警告' : '异常'}
-                  </Tag>
-                </div>
-                <div className="mt-3 flex gap-2">
-                  <Button size="small" type="primary">诊断</Button>
-                  <Button size="small">详情</Button>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </Card>
-      </Spin>
-    </div>
+      {/* 资源使用趋势图（后续对接监控数据） */}
+      <ProCard title="系统资源使用趋势" className="mt-4">
+        <div className="h-64 flex items-center justify-center text-gray-400">
+          <RiseOutlined className="text-4xl mr-2" />
+          监控图表功能开发中，后续对接Prometheus指标
+        </div>
+      </ProCard>
+    </PageContainer>
   )
 }
+
+export default Dashboard
