@@ -2,6 +2,7 @@ package com.bistoury.controller;
 
 import com.bistoury.entity.DiagnoseCommand;
 import com.bistoury.service.AgentService;
+import com.bistoury.service.AiDiagnoseService;
 import com.bistoury.service.WebSocketService;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
@@ -21,6 +22,9 @@ public class DiagnoseController {
 
     @Resource
     private WebSocketService webSocketService;
+
+    @Resource
+    private AiDiagnoseService aiDiagnoseService;
 
     /**
      * 提交诊断命令
@@ -71,8 +75,12 @@ public class DiagnoseController {
                     result.append("返回内容: 模拟执行结果，对接真实Agent后显示实际输出\n");
                 }
 
-                // 推送结果给前端
-                webSocketService.pushCommandResult(taskId, result.toString());
+                String resultStr = result.toString();
+                // 推送执行结果给前端
+                webSocketService.pushCommandResult(taskId, resultStr);
+                
+                // AI自动分析结果
+                aiDiagnoseService.analyzeResult(command.getCommand(), resultStr, taskId);
                 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
