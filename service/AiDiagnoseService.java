@@ -73,10 +73,15 @@ public class AiDiagnoseService {
         request.put("max_tokens", 2000);
 
         String prompt = buildPrompt(command, result);
-        request.put("messages", Arrays.asList(
-                Map.of("role", "system", "content": "你是专业的Java性能诊断专家，根据Arthas命令的执行结果，分析问题根因并给出具体的修复方案。回答要简洁专业，重点突出，用中文回答。"),
-                Map.of("role", "user", "content": prompt)
-        ));
+        Map<String, String> systemMessage = new HashMap<>();
+        systemMessage.put("role", "system");
+        systemMessage.put("content", "你是专业的Java性能诊断专家，根据Arthas命令的执行结果，分析问题根因并给出具体的修复方案。回答要简洁专业，重点突出，用中文回答。");
+        
+        Map<String, String> userMessage = new HashMap<>();
+        userMessage.put("role", "user");
+        userMessage.put("content", prompt);
+        
+        request.put("messages", Arrays.asList(systemMessage, userMessage));
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request, headers);
         ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, String.class);
