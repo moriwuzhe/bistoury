@@ -15,7 +15,7 @@ import {
 } from '@ant-design/pro-components'
 import { EyeOutlined, PlayCircleOutlined, DeleteOutlined, SyncOutlined } from '@ant-design/icons'
 import { Badge, DescriptionsProps } from 'antd'
-import api from '../services/api'
+import api, { agentApi } from '../services/api'
 import type { ColumnType } from 'antd/es/table'
 
 // 应用信息类型
@@ -44,85 +44,8 @@ const AppList: React.FC = () => {
   // 获取应用列表
   const fetchAppList = async () => {
     try {
-      // 暂时用模拟数据，后面对接真实API
-      const mockData: AppInfo[] = [
-        {
-          agentId: 'agent-1',
-          appName: '订单服务',
-          ip: '192.168.1.101',
-          hostname: 'app-server-01',
-          jdkVersion: '11.0.18',
-          appVersion: 'v1.0.2',
-          agentVersion: '2.0.7',
-          status: 'online',
-          startTime: '2026-03-30 10:00:00',
-          lastHeartbeatTime: '2026-03-31 02:15:00',
-          jvmArgs: '-Xms2g -Xmx4g -XX:+UseG1GC',
-          osInfo: 'Linux 4.18.0-305.el8.x86_64',
-          pid: 12345,
-        },
-        {
-          agentId: 'agent-2',
-          appName: '支付服务',
-          ip: '192.168.1.102',
-          hostname: 'app-server-02',
-          jdkVersion: '1.8.0_345',
-          appVersion: 'v2.1.0',
-          agentVersion: '2.0.7',
-          status: 'online',
-          startTime: '2026-03-30 09:30:00',
-          lastHeartbeatTime: '2026-03-31 02:15:10',
-          jvmArgs: '-Xms4g -Xmx8g -XX:+UseCMSCompactAtFullCollection',
-          osInfo: 'Linux 4.18.0-305.el8.x86_64',
-          pid: 23456,
-        },
-        {
-          agentId: 'agent-3',
-          appName: '用户服务',
-          ip: '192.168.1.103',
-          hostname: 'app-server-03',
-          jdkVersion: '11.0.18',
-          appVersion: 'v3.5.0',
-          agentVersion: '2.0.7',
-          status: 'warning',
-          startTime: '2026-03-30 11:20:00',
-          lastHeartbeatTime: '2026-03-31 02:14:50',
-          jvmArgs: '-Xms1g -Xmx2g -XX:+UseZGC',
-          osInfo: 'Linux 4.18.0-305.el8.x86_64',
-          pid: 34567,
-        },
-        {
-          agentId: 'agent-4',
-          appName: '商品服务',
-          ip: '192.168.1.104',
-          hostname: 'app-server-04',
-          jdkVersion: '1.8.0_345',
-          appVersion: 'v1.5.0',
-          agentVersion: '2.0.7',
-          status: 'error',
-          startTime: '2026-03-30 08:15:00',
-          lastHeartbeatTime: '2026-03-31 02:10:00',
-          jvmArgs: '-Xms2g -Xmx4g',
-          osInfo: 'Linux 4.18.0-305.el8.x86_64',
-          pid: 45678,
-        },
-        {
-          agentId: 'agent-5',
-          appName: '网关服务',
-          ip: '192.168.1.105',
-          hostname: 'gateway-server-01',
-          jdkVersion: '11.0.18',
-          appVersion: 'v2.0.0',
-          agentVersion: '2.0.7',
-          status: 'online',
-          startTime: '2026-03-30 12:00:00',
-          lastHeartbeatTime: '2026-03-31 02:15:20',
-          jvmArgs: '-Xms4g -Xmx8g -XX:+UseG1GC -XX:MaxGCPauseMillis=100',
-          osInfo: 'Linux 4.18.0-305.el8.x86_64',
-          pid: 56789,
-        },
-      ]
-      setAppList(mockData)
+      const data = await agentApi.getList()
+      setAppList(data as AppInfo[])
     } catch (error) {
       message.error('获取应用列表失败：' + (error as Error).message)
     }
@@ -235,9 +158,14 @@ const AppList: React.FC = () => {
           <Popconfirm
             title="确定要下线该应用的Agent吗？"
             description="下线后该应用将无法继续接收诊断命令，需要重启Agent才能重新接入。"
-            onConfirm={() => {
-              message.success('Agent已下线')
-              fetchAppList()
+            onConfirm={async () => {
+              try {
+                await agentApi.offline(record.agentId)
+                message.success('Agent已下线')
+                fetchAppList()
+              } catch (error) {
+                message.error('操作失败：' + (error as Error).message)
+              }
             }}
             okText="确定"
             cancelText="取消"
