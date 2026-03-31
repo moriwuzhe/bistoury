@@ -38,10 +38,21 @@
             <artifactId>joda-time</artifactId>
         </dependency>
 
+        <!-- 暂时使用官方Arthas依赖，后续源码整合完成后替换
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>bistoury-arthas</artifactId>
             <version>${project.version}</version>
+        </dependency> -->
+        <dependency>
+            <groupId>com.taobao.arthas</groupId>
+            <artifactId>arthas-core</artifactId>
+            <version>${arthas.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.taobao.arthas</groupId>
+            <artifactId>arthas-agent</artifactId>
+            <version>${arthas.version}</version>
         </dependency>
 
         <dependency>

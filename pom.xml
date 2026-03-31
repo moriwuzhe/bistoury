@@ -55,7 +55,7 @@
     <modules>
         <module>bistoury-common</module>
         <module>bistoury-remoting</module>
-        <module>bistoury-commands</module>
+        <!-- <module>bistoury-commands</module> 暂时跳过，依赖Arthas -->
         <module>bistoury-agent</module>
         <module>bistoury-independent-agent</module>
         <module>bistoury-instrument-agent</module>
@@ -64,7 +64,7 @@
         <!-- <module>bistoury-attach-arthas</module> -->
         <module>bistoury-magic-loader</module>
         <module>bistoury-magic-classes</module>
-        <module>bistoury-agent-task</module>
+        <!-- <module>bistoury-agent-task</module> 暂时跳过，依赖Arthas -->
         <module>bistoury-decompiler-fernflower</module>
         <module>bistoury-attach-common</module>
         <module>bistoury-clientside-common</module>
