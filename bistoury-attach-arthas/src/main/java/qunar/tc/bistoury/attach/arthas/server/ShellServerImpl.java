@@ -17,10 +17,10 @@
 
 package qunar.tc.bistoury.attach.arthas.server;
 
-import com.taobao.arthas.core.shell.ShellServerOptions;
-import com.taobao.arthas.core.shell.future.Future;
-import com.taobao.arthas.core.shell.handlers.Handler;
-import com.taobao.arthas.core.shell.system.impl.QGlobalJobControllerImpl;
+import qunar.tc.bistoury.arthas.core.shell.ShellServerOptions;
+import qunar.tc.bistoury.arthas.core.shell.future.Future;
+import qunar.tc.bistoury.arthas.core.shell.handlers.Handler;
+import qunar.tc.bistoury.arthas.core.shell.system.impl.QGlobalJobControllerImpl;
 
 import java.lang.reflect.Field;
 

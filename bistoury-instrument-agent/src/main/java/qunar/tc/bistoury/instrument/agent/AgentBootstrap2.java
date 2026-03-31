@@ -37,7 +37,7 @@ public class AgentBootstrap2 {
 
     // Arthas 3.7.2 removed AdviceWeaver.methodOnBegin etc. API, now use SpyAPI directly
     private static final String RESET = "resetBistouryClassLoader";
-    private static final String ARTHAS_CONFIGURE = "com.taobao.arthas.core.config.Configure";
+    private static final String ARTHAS_CONFIGURE = "qunar.tc.bistoury.arthas.core.config.Configure";
     private static final String BISTOURY_BOOTSTRAP = "qunar.tc.bistoury.attach.arthas.server.BistouryBootstrap";
     private static final String TO_CONFIGURE = "toConfigure";
     private static final String GET_JAVA_PID = "getJavaPid";

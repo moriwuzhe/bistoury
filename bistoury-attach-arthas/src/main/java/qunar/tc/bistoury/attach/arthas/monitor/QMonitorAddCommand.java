@@ -17,8 +17,8 @@
 
 package qunar.tc.bistoury.attach.arthas.monitor;
 
-import com.taobao.arthas.core.shell.command.AnnotatedCommand;
-import com.taobao.arthas.core.shell.command.CommandProcess;
+import qunar.tc.bistoury.arthas.core.shell.command.AnnotatedCommand;
+import qunar.tc.bistoury.arthas.core.shell.command.CommandProcess;
 import com.taobao.middleware.cli.annotations.Argument;
 import com.taobao.middleware.cli.annotations.Name;
 import com.taobao.middleware.logger.Logger;

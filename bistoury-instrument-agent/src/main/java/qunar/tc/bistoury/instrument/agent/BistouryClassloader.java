@@ -125,8 +125,8 @@ public class BistouryClassloader extends URLClassLoader {
         static {
             Set<String> nameSet = new HashSet<>();
             nameSet.add("com.fasterxml.jackson.databind.ser.BeanSerializerFactory");
-            nameSet.add("com.taobao.arthas.core.advisor.Enhancer");
-            nameSet.add("com.taobao.arthas.core.shell.term.impl.Helper");
+            nameSet.add("qunar.tc.bistoury.arthas.core.advisor.Enhancer");
+            nameSet.add("qunar.tc.bistoury.arthas.core.shell.term.impl.Helper");
 
             Set<String> namePrefixSet = new HashSet<>();
             for (String name : nameSet) {

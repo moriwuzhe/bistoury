@@ -39,13 +39,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.taobao.arthas</groupId>
-            <artifactId>arthas-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.taobao.arthas</groupId>
-            <artifactId>arthas-spy</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>bistoury-arthas</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

@@ -27,7 +27,7 @@ public class CompactClassHelper {
         addCompactClass("ch.qos.", compactPrefixPackage);
         addCompactClass("org.slf4j.", compactPrefixPackage);
         addCompactClass("io.termd.core.", compactPrefixPackage);
-        addCompactClass("com.taobao.arthas.", compactPrefixPackage);
+        addCompactClass("qunar.tc.bistoury.arthas.", compactPrefixPackage);
         addCompactClass("com.taobao.middleware.", compactPrefixPackage);
     }
 

@@ -18,8 +18,8 @@
 package qunar.tc.bistoury.attach.arthas.debug;
 
 import com.google.common.base.Strings;
-import com.taobao.arthas.core.shell.command.AnnotatedCommand;
-import com.taobao.arthas.core.shell.command.CommandProcess;
+import qunar.tc.bistoury.arthas.core.shell.command.AnnotatedCommand;
+import qunar.tc.bistoury.arthas.core.shell.command.CommandProcess;
 import com.taobao.middleware.cli.annotations.Name;
 import com.taobao.middleware.cli.annotations.Option;
 import com.taobao.middleware.logger.Logger;

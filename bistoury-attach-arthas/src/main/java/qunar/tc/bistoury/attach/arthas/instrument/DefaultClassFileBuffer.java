@@ -17,8 +17,8 @@
 
 package qunar.tc.bistoury.attach.arthas.instrument;
 
-import com.taobao.arthas.core.advisor.Enhancer;
-import com.taobao.arthas.core.util.affect.EnhancerAffect;
+import qunar.tc.bistoury.arthas.core.advisor.Enhancer;
+import qunar.tc.bistoury.arthas.core.util.affect.EnhancerAffect;
 import qunar.tc.bistoury.instrument.client.common.ClassFileBuffer;
 
 import java.io.File;

@@ -3,8 +3,8 @@ package com.taobao.arthas.core.shell.term.impl;
 
 import com.google.common.io.ByteSource;
 import java.nio.charset.StandardCharsets;
-import com.taobao.arthas.core.shell.ShellServerOptions;
-import com.taobao.arthas.core.util.LogUtil;
+import qunar.tc.bistoury.arthas.core.shell.ShellServerOptions;
+import qunar.tc.bistoury.arthas.core.util.LogUtil;
 import com.alibaba.arthas.deps.org.slf4j.Logger;
 import io.termd.core.readline.Keymap;
 

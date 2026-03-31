@@ -17,14 +17,14 @@
 
 package qunar.tc.bistoury.attach.arthas.server;
 
-import com.taobao.arthas.core.command.BuiltinCommandPack;
-import com.taobao.arthas.core.command.basic1000.*;
-import com.taobao.arthas.core.command.hidden.JulyCommand;
-import com.taobao.arthas.core.command.hidden.ThanksCommand;
-import com.taobao.arthas.core.command.klass1000.*;
-import com.taobao.arthas.core.command.logger.LoggerCommand;
-import com.taobao.arthas.core.command.monitor200.*;
-import com.taobao.arthas.core.shell.command.Command;
+import qunar.tc.bistoury.arthas.core.command.BuiltinCommandPack;
+import qunar.tc.bistoury.arthas.core.command.basic1000.*;
+import qunar.tc.bistoury.arthas.core.command.hidden.JulyCommand;
+import qunar.tc.bistoury.arthas.core.command.hidden.ThanksCommand;
+import qunar.tc.bistoury.arthas.core.command.klass1000.*;
+import qunar.tc.bistoury.arthas.core.command.logger.LoggerCommand;
+import qunar.tc.bistoury.arthas.core.command.monitor200.*;
+import qunar.tc.bistoury.arthas.core.shell.command.Command;
 import qunar.tc.bistoury.attach.arthas.agentInfo.AgentInfoCommand;
 import qunar.tc.bistoury.attach.arthas.config.AppConfigCommand;
 import qunar.tc.bistoury.attach.arthas.config.AppConfigFileCommand;

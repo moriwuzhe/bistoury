@@ -31,8 +31,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.taobao.arthas</groupId>
-            <artifactId>arthas-core</artifactId>
+            <groupId>qunar.tc.bistoury</groupId>
+            <artifactId>bistoury-arthas</artifactId>
         </dependency>
 
         <dependency>

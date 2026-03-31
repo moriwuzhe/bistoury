@@ -20,7 +20,7 @@ package qunar.tc.bistoury.commands.arthas;
 import com.google.common.base.Strings;
 import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
-import com.taobao.arthas.core.config.Configure;
+import qunar.tc.bistoury.arthas.core.config.Configure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

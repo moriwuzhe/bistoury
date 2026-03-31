@@ -1,7 +1,7 @@
 package qunar.tc.bistoury.attach.arthas.server;
 
-import com.taobao.arthas.core.shell.command.AnnotatedCommand;
-import com.taobao.arthas.core.shell.command.CommandProcess;
+import qunar.tc.bistoury.arthas.core.shell.command.AnnotatedCommand;
+import qunar.tc.bistoury.arthas.core.shell.command.CommandProcess;
 import com.taobao.middleware.cli.annotations.Name;
 import com.taobao.middleware.cli.annotations.Summary;
 import qunar.tc.bistoury.common.BistouryConstants;
